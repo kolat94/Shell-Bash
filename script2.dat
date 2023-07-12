@@ -1,0 +1,41 @@
+#!/bin/bash
+
+echo -n -e "veuillez entrer l'adresse ip: \t"
+read ip
+echo -n -e "veuillez entrer le masque: \t"
+read masque
+echo -n -e "reseau: \t\t\t"
+for ((i=1;i<5;i++)); do {
+export io$i=$(echo $ip | cut -d "." -f $i)
+export mo$i=$(echo $masque | cut -d "." -f $i)
+	if (( $i != 4 )); then {
+	        echo -n $(($((io$i))&$((mo$i)))).
+	        sleep 0.5
+	}
+	else {
+	        echo $(($((io$i))&$((mo$i))))
+	}
+	fi
+}
+done
+echo -n -e "broadcast: \t\t\t"
+for ((i=1;i<5;i++)); do {
+export io$i=$(echo $ip | cut -d "." -f $i)
+export mo$i=$(echo $masque | cut -d "." -f $i)
+	if (( $((mo$i)) == 255 )); then {
+	        echo -n $(($((io$i))&$((mo$i)))).
+	        sleep 0.5
+	}
+	elif ((  $((mo$i)) != 255 )) && (( $i == 4 )); then {
+	        interval=$(($((255^$((mo$i))))))
+	        echo -n $(($(($((io$i))&$((mo$i)))) + $interval ))
+	}
+	else {
+	        interval=$(($((255^$((mo$i))))))
+	        echo -n $(($(($((io$i))&$((mo$i)))) + $interval )).
+	}
+	fi
+}
+done
+echo -e "\n"
+

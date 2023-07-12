@@ -1,0 +1,12 @@
+#!/bin/bash
+file=$(sed 1d data.csv)
+
+for ligne in $file;
+do
+
+        poste=$(echo $ligne | cut -d ';' -f1)
+        adresse=$(echo $ligne | cut -d ';' -f2)
+
+        echo -e "$poste" "\t" "IN" "\t" "A" "\t" "$adresse" | tee -a /etc/named/resultat.ccs
+
+done
